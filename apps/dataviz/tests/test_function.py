@@ -63,7 +63,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # one 'DataViz' second 'Data Upload'
         # DataViz tab open by default
         # 'no data available for visualization' message shown
-
+        self.assertIn('no data available for visualization', self.browser.page_source)
         # user click on 'Data Upload' tab
 
         # upload file in csv format
