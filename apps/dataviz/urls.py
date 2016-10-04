@@ -15,9 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import url
 
-from .views import HomeView
+from .views import HomeView, UploadFileFormView, UploadResultView
 
 app_name = 'dataviz'
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='home'),
+    url(r'^upload/$', UploadFileFormView.as_view(), name='upload'),
+    url(r'^upload_result/$', UploadResultView.as_view(), name='upload_result'),
 ]

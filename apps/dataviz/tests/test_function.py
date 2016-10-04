@@ -62,6 +62,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # user notice that there is two tab on page
         # one 'DataViz' second 'Data Upload'
         # DataViz tab open by default
+
         # 'no data available for visualization' message shown
         self.assertIn('no data available for visualization', self.browser.page_source)
         # user click on 'Data Upload' tab
