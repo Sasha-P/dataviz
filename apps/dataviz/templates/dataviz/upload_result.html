@@ -3,6 +3,6 @@
 {% block title %}DataViz | Home{% endblock %}
 
 {% block content %}
-    <p>result</p>
-    <p>Go to <a href="{% url 'dataviz:home' %}">DataViz</a></p>
+    <p class="lead">{{ request.session.name }} successfully processed!</p>
+    <p><a href="{% url 'dataviz:upload' %}">Upload</a> more or <a href="{% url 'dataviz:home' %}">Visualize</a> data.</p>
 {% endblock %}

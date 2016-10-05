@@ -5,6 +5,11 @@
 {% block menu_upload %}class="active"{% endblock %}
 
 {% block content %}
+
+{% if form.errors %}
+    <p class="lead">{{ form.file.errors.as_text }}</p>
+{% endif %}
+
 <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">{% csrf_token %}
     {% for field in form %}
         <div class="form-group">

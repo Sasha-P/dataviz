@@ -59,13 +59,13 @@ class NewVisitorTest(StaticLiveServerTestCase):
         time.sleep(1)
         # and was redirected to DataViz page
         self.assertIn('DataViz | Home', self.browser.title, "Browser title was " + self.browser.title)
-        # user notice that there is two tab on page
-        # one 'DataViz' second 'Data Upload'
-        # DataViz tab open by default
+        # user notice that there is two menu items on page
+        # first 'Home', second 'Upload'
+        # Home page active by default
 
         # 'no data available for visualization' message shown
-        self.assertIn('no data available for visualization', self.browser.page_source)
-        # user click on 'Data Upload' tab
+        self.assertIn('No data available for visualization.', self.browser.page_source)
+        # user click on 'Upload' menu item
 
         # upload file in csv format
 
