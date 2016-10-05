@@ -4,9 +4,114 @@
 
 {% block menu_home %}class="active"{% endblock %}
 
-{% block content %}
-<p class="lead">No data available for visualization.</p>
-<p><a href="{% url 'dataviz:upload' %}">Upload</a> data to vizualize.</p>
+{% block css %}
+<!-- Styles -->
+<style>
+#chartdiv {
+	width		: 100%;
+	height		: 450px;
+	font-size	: 16px;
+}
+</style>
 {% endblock %}
 
-{% block js %}{% endblock %}
+{% block content %}
+{% if not regions %}
+<p class="lead">No data available for visualization.</p>
+<p><a href="{% url 'dataviz:upload' %}">Upload</a> data to vizualize.</p>
+{% else %}
+<form>
+    <select class="form-control">
+        {% for region in regions %}
+        <option>{{ region }}</option>
+        {% endfor %}
+    </select>
+</form>
+<div id="chartdiv"></div>
+{% endif %}
+{% endblock %}
+
+{% block js %}
+<!-- Resources -->
+<script src="{% static 'js/amcharts/amcharts.js' %}"></script>
+<script src="{% static 'js/amcharts/serial.js' %}"></script>
+<script src="{% static 'js/amcharts/themes/black.js' %}"></script>
+
+<!-- Chart code -->
+<script>
+var chart = AmCharts.makeChart( "chartdiv", {
+  "type": "serial",
+  "theme": "black",
+  "dataProvider": [ {
+    "country": "USA",
+    "value": 2025
+  }, {
+    "country": "China",
+    "value": 1882
+  }, {
+    "country": "Japan",
+    "value": 1809
+  }, {
+    "country": "Germany",
+    "value": 1322
+  }, {
+    "country": "UK",
+    "value": 1122
+  }, {
+    "country": "France",
+    "value": 1114
+  }, {
+    "country": "India",
+    "value": 984
+  }, {
+    "country": "Spain",
+    "value": 711
+  }, {
+    "country": "Netherlands",
+    "value": 665
+  }, {
+    "country": "Russia",
+    "value": 580
+  }, {
+    "country": "South Korea",
+    "value": 443
+  }, {
+    "country": "Canada",
+    "value": 441
+  }, {
+    "country": "Brazil",
+    "value": 395
+  } ],
+  "valueAxes": [ {
+    "gridColor": "#FFFFFF",
+    "gridAlpha": 0.2,
+    "dashLength": 0
+  } ],
+  "gridAboveGraphs": true,
+  "startDuration": 1,
+  "graphs": [ {
+    "balloonText": "[[category]]: <b>[[value]]</b>",
+    "fillAlphas": 0.8,
+    "lineAlpha": 0.2,
+    "type": "column",
+    "valueField": "value"
+  } ],
+  "chartCursor": {
+    "categoryBalloonEnabled": false,
+    "cursorAlpha": 0,
+    "zoomable": false
+  },
+  "categoryField": "country",
+  "categoryAxis": {
+    "gridPosition": "start",
+    "gridAlpha": 0,
+    "tickPosition": "start",
+    "tickLength": 20
+  },
+  "export": {
+    "enabled": false
+  }
+
+} );
+</script>
+{% endblock %}

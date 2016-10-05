@@ -1,4 +1,5 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.contrib.auth.models import User
 
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -19,6 +20,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
         cls.browser = webdriver.Firefox(capabilities=caps)
         cls.browser.implicitly_wait(10)
+        cls.user = User.objects.create_user(username='user', email='user@test.com', password='top_secret')
+        cls.user.save()
 
     @classmethod
     def tearDownClass(cls):
@@ -36,7 +39,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def test_user_and_csv(self):
         # user visit home page of DataViz
-        self.browser.get('http://localhost:8000')
+        self.browser.get(self.live_server_url)
         # user notice that title of page contain 'DataViz'
         self.assertIn('DataViz | Login', self.browser.title, "Browser title was " + self.browser.title)
         # also there are field to enter login
@@ -53,8 +56,8 @@ class NewVisitorTest(StaticLiveServerTestCase):
         # user enter correct login and password
         login_input, password_input, submit_input = self._login_input()
         login_input.clear()
-        login_input.send_keys('admin')
-        password_input.send_keys('createsuperuser')
+        login_input.send_keys('user')
+        password_input.send_keys('top_secret')
         submit_input.click()
         time.sleep(1)
         # and was redirected to DataViz page

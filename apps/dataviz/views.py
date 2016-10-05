@@ -11,11 +11,17 @@ import json
 from datetime import datetime
 
 from .forms import UploadFileForm
+from .models import Region, Country
 
 
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'dataviz/home.html'
     login_url = reverse_lazy('login')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['regions'] = Region.objects.all()
+        return context
 
 
 class UploadFileFormView(LoginRequiredMixin, FormView):
@@ -61,21 +67,53 @@ class UploadFileFormView(LoginRequiredMixin, FormView):
         with open(f, newline='') as csvfile:
             csv_reader = csv.reader(csvfile, delimiter=',', quotechar='|')
             for row in csv_reader:
-                print(', '.join(row))
+                d = {}
+                d['region'] = row[0]
+                d['country'] = row[1]
+                if row[2].isdigit():
+                    d['value'] = row[2]
+                else:
+                    continue
+
+                self._add_data(d)
         os.remove(f)
 
     def _handle_json_file(self, f):
         with open(f) as data_file:
             data = json.load(data_file)
-            print(data)
+            for item in data['data']:
+                d = {}
+                d['region'] = item['Регион']
+                d['country'] = item['Страна']
+                d['value'] = item['Значение']
+                self._add_data(d)
         os.remove(f)
 
     def _handle_xls_file(self, f):
         book = xlrd.open_workbook(f)
         sh = book.sheet_by_index(0)
         for rx in range(sh.nrows):
-            print(sh.row(rx))
+            r = sh.row(rx)
+            d = {}
+            d['region'] = r[0].value
+            d['country'] = r[1].value
+            if str(r[2].value).isdigit():
+                d['value'] = r[2].value
+            else:
+                continue
+
+            self._add_data(d)
         os.remove(f)
+
+    def _add_data(self, data):
+        # print(data)
+        region, r_create = Region.objects.get_or_create(name=data['region'])
+        region.save()
+        # print(region)
+        country, c_create = Country.objects.get_or_create(region=region, name=data['country'])
+        country.value = data['value']
+        country.save()
+        # print(country)
 
 
 class UploadResultView(LoginRequiredMixin, TemplateView):
