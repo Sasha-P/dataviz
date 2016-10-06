@@ -1,0 +1,29 @@
+{% extends "dataviz/base.html" %}{% load static %}
+
+{% block title %}DataViz | Home{% endblock %}
+
+{% block menu_home %}class="active"{% endblock %}
+
+{% block content %}
+    {% if not regions %}
+        <p class="lead">No data is available for visualization.</p>
+        <p><a href="{% url 'dataviz:upload' %}">Upload</a> data to vizualize.</p>
+    {% else %}
+        <form class="form-horizontal form-signin">{% csrf_token %}
+            <select id="region" name="region" class="form-control">
+                {% for region in regions %}
+                <option>{{ region }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        <div id="chartdiv"></div>
+    {% endif %}
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/amcharts/amcharts.js' %}"></script>
+    <script src="{% static 'js/amcharts/serial.js' %}"></script>
+    <script src="{% static 'js/amcharts/themes/white.js' %}"></script>
+    <script src="{% static 'js/amcharts/plugins/dataloader/dataloader.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

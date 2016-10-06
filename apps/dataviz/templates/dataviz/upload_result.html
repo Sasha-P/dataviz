@@ -1,0 +1,13 @@
+{% extends "dataviz/base.html" %}{% load static %}
+
+{% block title %}DataViz | Result{% endblock %}
+
+{% block content %}
+    {% if request.session.error %}
+        <p class="lead">Failed to process {{ request.session.name }}!</p>
+        <p>Check the file and try <a href="{% url 'dataviz:upload' %}">again.</a></p>
+    {% else %}
+        <p class="lead">{{ request.session.name }} has been successfully processed!</p>
+        <p><a href="{% url 'dataviz:upload' %}">Upload</a> more or <a href="{% url 'dataviz:home' %}">Visualize</a> the data.</p>
+    {% endif %}
+{% endblock %}
