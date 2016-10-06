@@ -20,7 +20,7 @@
 <p class="lead">No data available for visualization.</p>
 <p><a href="{% url 'dataviz:upload' %}">Upload</a> data to vizualize.</p>
 {% else %}
-<form>
+<form class="form-horizontal form-signin">
     <select class="form-control">
         {% for region in regions %}
         <option>{{ region }}</option>
@@ -35,53 +35,17 @@
 <!-- Resources -->
 <script src="{% static 'js/amcharts/amcharts.js' %}"></script>
 <script src="{% static 'js/amcharts/serial.js' %}"></script>
-<script src="{% static 'js/amcharts/themes/black.js' %}"></script>
+<script src="{% static 'js/amcharts/themes/white.js' %}"></script>
+<script src="{% static 'js/amcharts/plugins/dataloader/dataloader.min.js' %}"></script>
 
 <!-- Chart code -->
 <script>
 var chart = AmCharts.makeChart( "chartdiv", {
   "type": "serial",
-  "theme": "black",
-  "dataProvider": [ {
-    "country": "USA",
-    "value": 2025
-  }, {
-    "country": "China",
-    "value": 1882
-  }, {
-    "country": "Japan",
-    "value": 1809
-  }, {
-    "country": "Germany",
-    "value": 1322
-  }, {
-    "country": "UK",
-    "value": 1122
-  }, {
-    "country": "France",
-    "value": 1114
-  }, {
-    "country": "India",
-    "value": 984
-  }, {
-    "country": "Spain",
-    "value": 711
-  }, {
-    "country": "Netherlands",
-    "value": 665
-  }, {
-    "country": "Russia",
-    "value": 580
-  }, {
-    "country": "South Korea",
-    "value": 443
-  }, {
-    "country": "Canada",
-    "value": 441
-  }, {
-    "country": "Brazil",
-    "value": 395
-  } ],
+  "theme": "white",
+  "dataLoader": {
+    "url": "https://s3-us-west-2.amazonaws.com/s.cdpn.io/218423/data1.json"
+  },
   "valueAxes": [ {
     "gridColor": "#FFFFFF",
     "gridAlpha": 0.2,
@@ -111,7 +75,13 @@ var chart = AmCharts.makeChart( "chartdiv", {
   "export": {
     "enabled": false
   }
-
 } );
+
+function setDataSet(dataset_url) {
+  AmCharts.loadFile(dataset_url, {}, function(data) {
+    chart.dataProvider = AmCharts.parseJSON(data);
+    chart.validateData();
+  });
+}
 </script>
 {% endblock %}

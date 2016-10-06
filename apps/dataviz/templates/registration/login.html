@@ -16,22 +16,22 @@
         {% endif %}
     {% endif %}
 
-    <form class="form-horizontal" method="post" action="{% url 'login' %}">{% csrf_token %}
-        <div class="form-group">
-            <label class="col-sm-2 control-label" for="{{ form.username.name }}">{{ form.username.label }}:</label>
-            <div class="col-sm-10">
-            {{ form.username|add_class:"form-control" }}
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label" for="{{ form.password.name }}">{{ form.password.label }}:</label>
-            <div class="col-sm-10">
-            {{ form.password|add_class:"form-control" }}
-            </div>
-        </div>
+    <form class="form-horizontal form-signin" method="post" action="{% url 'login' %}">{% csrf_token %}
+        <!--<div class="form-group">-->
+            <label class="sr-only" for="{{ form.username.name }}">{{ form.username.label }}:</label>
+            <!--<div class="col-sm-9">-->
+            {{ form.username|add_class:"form-control"|attr:"placeholder:Username" }}
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+            <label class="sr-only" for="{{ form.password.name }}">{{ form.password.label }}:</label>
+            <!--<div class="col-sm-9">-->
+            {{ form.password|add_class:"form-control"|attr:"placeholder:Password" }}
+            <!--</div>-->
+        <!--</div>-->
 
-    <input class="btn btn-lg btn-default" type="submit" value="Log in"/>
-    <input type="hidden" name="next" value="{{ next }}" />
+        <input class="btn btn-lg btn-default" type="submit" value="Log in"/>
+        <input type="hidden" name="next" value="{{ next }}" />
     </form>
 
 {% endblock %}

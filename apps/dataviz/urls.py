@@ -13,12 +13,20 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
+
+from rest_framework import routers
 
 from .views import HomeView, UploadFileFormView, UploadResultView
+from .api import views as api_views
+
+router = routers.DefaultRouter()
 
 app_name = 'dataviz'
 urlpatterns = [
+    url(r'^api/v1/', include(router.urls)),
+    url(r'^api/v1/region/$', api_views.RegionGet.as_view()),
+
     url(r'^$', HomeView.as_view(), name='home'),
     url(r'^upload/$', UploadFileFormView.as_view(), name='upload'),
     url(r'^upload_result/$', UploadResultView.as_view(), name='upload_result'),
