@@ -42,16 +42,24 @@ class UploadFileFormView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         if self.file:
-            content_type = self.file.content_type
-            name = self._save_file(self.file)
-            if content_type == "application/vnd.ms-excel":
-                self._handle_xls_file(name)
-            elif content_type == "application/octet-stream":
-                self._handle_json_file(name)
-            elif content_type == "text/csv":
-                self._handle_csv_file(name)
+            try:
+                content_type = self.file.content_type
+                name = self._save_file(self.file)
 
-            self.request.session['name'] = self.file.name
+                self.request.session['error'] = False
+                self.request.session['name'] = self.file.name
+
+                if content_type == "application/vnd.ms-excel":
+                    self._handle_xls_file(name)
+                elif content_type == "application/octet-stream":
+                    self._handle_json_file(name)
+                elif content_type == "text/csv":
+                    self._handle_csv_file(name)
+
+            except Exception as e:
+                self.request.session['error'] = True
+            finally:
+                os.remove(name)
 
         self.file = None
         return super().form_valid(form)
@@ -76,7 +84,6 @@ class UploadFileFormView(LoginRequiredMixin, FormView):
                     continue
 
                 self._add_data(d)
-        os.remove(f)
 
     def _handle_json_file(self, f):
         with open(f) as data_file:
@@ -87,7 +94,6 @@ class UploadFileFormView(LoginRequiredMixin, FormView):
                 d['country'] = item['Страна']
                 d['value'] = item['Значение']
                 self._add_data(d)
-        os.remove(f)
 
     def _handle_xls_file(self, f):
         book = xlrd.open_workbook(f)
@@ -103,17 +109,14 @@ class UploadFileFormView(LoginRequiredMixin, FormView):
                 continue
 
             self._add_data(d)
-        os.remove(f)
 
     def _add_data(self, data):
-        # print(data)
         region, r_create = Region.objects.get_or_create(name=data['region'])
         region.save()
-        # print(region)
+
         country, c_create = Country.objects.get_or_create(region=region, name=data['country'])
         country.value = data['value']
         country.save()
-        # print(country)
 
 
 class UploadResultView(LoginRequiredMixin, TemplateView):
