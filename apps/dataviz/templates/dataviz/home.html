@@ -6,7 +6,7 @@
 
 {% block content %}
     {% if not regions %}
-        <p class="lead">No data available for visualization.</p>
+        <p class="lead">No data is available for visualization.</p>
         <p><a href="{% url 'dataviz:upload' %}">Upload</a> data to vizualize.</p>
     {% else %}
         <form class="form-horizontal form-signin">{% csrf_token %}

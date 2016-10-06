@@ -16,7 +16,7 @@ $(document).ready(function(){
             "startDuration": 1,
             "graphs": [ {
                 "balloonText": "[[category]]: <b>[[value]]</b>",
-                "fillAlphas": 0.8,
+                "fillAlphas": 1.0,
                 "lineAlpha": 0.2,
                 "type": "column",
                 "valueField": "value"
